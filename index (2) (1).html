@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RickFlix • Streaming Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .logo-font { font-family: 'Playfair Display', sans-serif; }
+
+        .hero-bg {
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.85)), 
+                              url('https://picsum.photos/id/1015/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .nav-link:hover { color: #e50914; transform: translateY(-2px); }
+        .video-card:hover { transform: scale(1.08) translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6); }
+
+        .streaming-bar {
+            height: 3px;
+            background: linear-gradient(90deg, #e50914, #ff9900, #e50914);
+            background-size: 200% 100%;
+            animation: streaming 4s linear infinite;
+        }
+        @keyframes streaming { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-screen-2xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-8">
+                <div onclick="triggerSecretLogin()" class="flex items-center gap-x-3 cursor-pointer group">
+                    <div class="w-9 h-9 bg-red-600 rounded flex items-center justify-center text-white font-bold text-2xl logo-font">R</div>
+                    <span class="text-3xl font-bold tracking-tighter logo-font">RICKFLIX</span>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-x-2 text-xs uppercase tracking-widest font-mono">
+                    <i class="fa-solid fa-waveform text-emerald-400"></i>
+                    <span class="streaming-bar w-24 inline-block rounded"></span>
+                    <span class="text-emerald-400 animate-pulse">LIVE</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex gap-x-8 text-sm font-medium">
+                <a href="#" class="nav-link text-white">Inicio</a>
+                <a href="#" class="nav-link text-zinc-400 hover:text-white">Videos</a>
+                <a href="#" class="nav-link text-zinc-400 hover:text-white">Series</a>
+            </nav>
+
+            <div class="flex items-center gap-x-6">
+                <button onclick="toggleLoginModal()" 
+                        class="flex items-center gap-x-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 px-5 py-2 rounded-full text-sm">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Iniciar Sesión</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero-bg h-screen flex items-center relative">
+        <div class="max-w-screen-2xl mx-auto px-8 pt-20">
+            <div class="max-w-lg">
+                <h1 class="text-7xl font-bold leading-none logo-font mb-4">RICK ASTLEY<br>FOREVER</h1>
+                <p class="text-xl text-zinc-300 mb-8">El rey del pop que nunca te dejará...</p>
+                
+                <div class="flex gap-4">
+                    <button onclick="playPublicVideo()" 
+                            class="bg-white text-black font-semibold px-8 py-4 rounded-xl flex items-center gap-x-3 hover:bg-white/90 transition">
+                        <i class="fa-solid fa-play"></i> VER TRAILER
+                    </button>
+                    <button onclick="toggleLoginModal()" 
+                            class="border-2 border-white/70 px-8 py-4 rounded-xl hover:bg-white/10 transition">
+                        <i class="fa-solid fa-lock"></i> EXCLUSIVO
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <main class="max-w-screen-2xl mx-auto px-8 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Video Público -->
+            <div onclick="playPublicVideo()" class="cursor-pointer group">
+                <div class="relative aspect-video bg-zinc-900 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/1015/800/450" class="w-full h-full object-cover group-hover:scale-105 transition">
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+                        <i class="fa-solid fa-play text-6xl text-white/80"></i>
+                    </div>
+                </div>
+                <h3 class="mt-4 text-2xl font-semibold">Together Forever (Official Video)</h3>
+            </div>
+
+            <!-- Video Exclusivo -->
+            <div id="exclusive-card" onclick="handleExclusiveClick()" class="cursor-pointer group relative">
+                <div class="relative aspect-video bg-zinc-900 rounded-3xl overflow-hidden">
+                    <img src="https://picsum.photos/id/237/800/450" class="w-full h-full object-cover group-hover:scale-105 transition">
+                    <div id="lock-overlay" class="absolute inset-0 bg-black/80 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fa-solid fa-lock text-6xl mb-4"></i>
+                            <p class="uppercase text-sm tracking-widest">Contenido Exclusivo</p>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="mt-4 text-2xl font-semibold">Never Gonna Give You Up (Remaster)</h3>
+            </div>
+        </div>
+
+        <!-- Bio (solo después de login) -->
+        <div id="rick-bio" class="hidden mt-16 bg-zinc-900 rounded-3xl p-10">
+            <h2 class="text-4xl font-bold mb-6">Sobre Rick Astley</h2>
+            <p class="text-lg text-zinc-300">
+                Cantante británico nacido en 1966. Famoso por su hit "Never Gonna Give You Up" y por ser el origen del famoso <strong>Rickroll</strong>.
+            </p>
+        </div>
+    </main>
+
+    <!-- Modales (Video Público, Exclusivo y Login) -->
+    <!-- ... (mantengo los mismos modales del código anterior para no alargar demasiado) ... -->
+
+    <script>
+        let isLoggedIn = false;
+
+        function triggerSecretLogin() {
+            if (Math.random() > 0.7) toggleLoginModal(); // Click rápido en logo
+        }
+
+        function toggleLoginModal() {
+            // Simple prompt para GitHub Pages (más fácil)
+            const user = prompt("Usuario:");
+            const pass = prompt("Contraseña:");
+            
+            if ((user && user.toLowerCase().includes("rick") || user === "astley") && 
+                (pass === "roll" || pass === "1987" || pass === "rickroll")) {
+                isLoggedIn = true;
+                document.getElementById('rick-bio').classList.remove('hidden');
+                document.getElementById('lock-overlay').style.display = 'none';
+                alert("¡Bienvenido, fan VIP! 🎉");
+                openExclusiveVideo();
+            } else {
+                alert("Credenciales incorrectas. Pista: Rickroll");
+            }
+        }
+
+        function openExclusiveVideo() {
+            window.open("https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1", "_blank");
+        }
+
+        function playPublicVideo() {
+            window.open("https://www.youtube.com/embed/DLzxrzFCyOs?autoplay=1", "_blank");
+        }
+
+        function handleExclusiveClick() {
+            if (!isLoggedIn) {
+                toggleLoginModal();
+            } else {
+                openExclusiveVideo();
+            }
+        }
+    </script>
+</body>
+</html>
